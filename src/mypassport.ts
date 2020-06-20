@@ -29,7 +29,6 @@ class MyPassport {
     }
   }
 
-
   // 세션에서 로그인 상태 복구
   session() {
     return (req: Request, res: Response, next: NextFunction) => {

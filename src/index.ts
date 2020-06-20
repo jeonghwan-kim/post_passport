@@ -1,7 +1,8 @@
 import express, {Request, Response, NextFunction, urlencoded, json} from 'express';
 import session from 'express-session';
 import path from 'path';
-import mypassport, { isAuthenticated } from './mypassport';
+// import mypassport, { isAuthenticated } from './mypassport';
+import passport, { isAuthenticated } from './passport'
 
 const app = express();
 
@@ -16,15 +17,18 @@ app.use(urlencoded({ extended: true }))
 app.use(json())
 
 // 초기화
-app.use(mypassport.initialize())
+// app.use(mypassport.initialize())
+app.use(passport.initialize())
 
 // 세션에서 로그인 정보 복구 
-app.use(mypassport.session())
+// app.use(mypassport.session())
+app.use(passport.session())
 
 app.get('/debug', (req: Request, res: Response)=> {
   res.json({
     'req.session': req.session, 
     'req.user': req.user,
+    'req._passport': req._passport
   })
 })
 
@@ -33,7 +37,7 @@ app.get('/login', (req: Request, res: Response) => {
 })
 
 // 로그인 
-app.post('/login', mypassport.authenticate(), (req: Request, res: Response, next: NextFunction) => {
+app.post('/login', passport.authenticate('local'), (req: Request, res: Response, next: NextFunction) => {
   res.send('로그인 성공');
 })
 
